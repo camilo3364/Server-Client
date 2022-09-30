@@ -6,29 +6,7 @@ import (
 	"io"
 	"net"
 	"os"
-
-	pk "server.com/serverClient/src/client"
 )
-
-//func Copy(src, dst string) error {
-//in, err := os.Open(src)
-//if err != nil {
-//	return err
-//}
-//defer in.Close()
-
-//	out, err := os.Create(dst)
-//	if err != nil {
-//		return err
-//	}
-//	defer out.Close()
-
-//	_, err = io.Copy(out, in)
-//	if err != nil {
-//		return err
-//	}
-//	return out.Close()
-//}
 
 func servidor() {
 	s, err := net.Listen("tcp", ":9999")
@@ -48,8 +26,11 @@ func servidor() {
 
 func handleClient(c net.Conn) {
 
-	var client pk.Client
-	print(client)
+	//var client
+	//client.Fiel = client.EnterName()
+	//client.Fiel = "archivo.txt"
+	//fmt.Println(client)
+
 	b := make([]byte, 1000000)
 	bs, err := c.Read(b)
 	if err != nil {
@@ -75,10 +56,7 @@ func handleClient(c net.Conn) {
 }
 
 func main() {
-	var client pk.Client
-	client.Name = "Juan"
-	client.Credential = 2
-	fmt.Println(client)
+
 	//src := "/Programming/serverProyect/archivos/yolov3.png"
 	//dst := "/Programming/serverProyect/carpeta_salida/output.png"
 	go servidor()

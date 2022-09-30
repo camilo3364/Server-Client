@@ -1,4 +1,4 @@
-package client
+package main
 
 import (
 	"bytes"
@@ -6,19 +6,6 @@ import (
 	"net"
 	"os"
 )
-
-type Client struct {
-	Name   string
-	Serial int
-}
-
-func EnterName() string {
-	var nameFile string
-	fmt.Println("Enter the name of the file, for example (hello.txt o image.jpg): ")
-	fmt.Scan(&nameFile)
-	return nameFile
-
-}
 
 func client(src, dataType string) {
 
@@ -43,7 +30,6 @@ func client(src, dataType string) {
 	}
 	c.Write([]byte(contents))
 	//
-	EnterName()
 	//c.Write([]byte(contents))
 	//save the imgByte to file
 	//out, err := os.Create("./QRImg.png")
@@ -53,16 +39,13 @@ func client(src, dataType string) {
 }
 
 func main() {
-
+	//var name string
+	//fmt.Scan(&name)
 	src := "/Programming/serverProyect/archivos/"
 	dataType := "prueba1.txt"
 	fmt.Println(dataType)
-	//enterName()
-	//go EnterName()
 	go client(src, dataType)
 
-	//f := "/Programming/serverProyect/archivos/prueba1.txt"
-	//openFile(f)
 	var input string
 	fmt.Scanln(&input)
 
