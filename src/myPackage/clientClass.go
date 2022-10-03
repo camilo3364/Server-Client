@@ -8,6 +8,7 @@ import (
 
 type Client struct {
 	Channel string
+	port    int
 }
 
 func Clients(persona Client) {
