@@ -2,8 +2,12 @@ package main
 
 import (
 	"bytes"
-	"crypto/rand"
+	"strconv"
+	"time"
+
+	//"crypto/rand"
 	"fmt"
+	"math/rand"
 	"net"
 	"os"
 	"strings"
@@ -25,28 +29,37 @@ func sendTcp(tcp string) {
 }
 func listen(channel string) {
 	var counter int
+
+	rand.Seed(int64(time.Now().UnixNano()))
+	randomNumber2 := rand.Intn(10)
+
+	fmt.Println("El número es: 555" + strconv.Itoa(randomNumber2))
+
 	for {
 		if channel == "1" {
-			s, err := net.Listen("tcp", ":8080")
+			s, err := net.Listen("tcp", ":555"+strconv.Itoa(randomNumber2))
+
 			if err != nil {
 
 				main()
 				continue
-
-				//fmt.Println(err)
-				//fmt.Println("Ocurrio error en 1")
-				//return
 			}
+
 			c, err := s.Accept()
+
 			if err != nil {
+
 				//main()
 				fmt.Println(err)
 				fmt.Println("Ocurrio error en 2")
 				continue
 			}
+			//New connection of other client
+
 			counter += 1
 			fmt.Println("You receive a file by ch1")
 			fmt.Println(c)
+
 			//go handleClient2(c, counter)
 			s.Close()
 		} else if channel == "2" {
@@ -109,10 +122,11 @@ func client(src, dataType string, wg *sync.WaitGroup, channel string) {
 
 func main() {
 	for {
+		//var person pk.Client
 		//variables
-		RandomCrypto, _ := rand.Prime(rand.Reader, 12)
-		randomNumber := RandomCrypto.String()
-		fmt.Println(randomNumber)
+		//RandomCrypto := 2000
+		randomNumber := "8081"
+
 		var wg sync.WaitGroup
 		var name string
 		var channel string
@@ -126,34 +140,44 @@ func main() {
 		fmt.Println("You need to join the channel (1 or 2): ")
 		fmt.Scan(&channel)
 		if channel == "1" {
-			channelOut = "1chanel_..." + randomNumber + "_..."
+			channelOut = "1chanel_..."
 			sendTcp(randomNumber)
 			fmt.Println(randomNumber)
 			fmt.Println(channel)
+			//prueba1
+			c, err := net.Dial("tcp", ":9999")
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Println(c)
+			//
 		} else if channel == "2" {
-			channelOut = "2chanel_..." + randomNumber + "_..."
+			channelOut = "2chanel_..."
 		} else {
 			fmt.Println("Please, you should select a channel ")
 			main()
 		}
 
 		if listen1 == "1" {
-			//flag := false
-			//var loop string
-			fmt.Println("In this momento you are listen a message...")
-			go listen(channel)
-			/*for flag == false {
-				fmt.Println("In this momento you are listen a message...")
-				go listen(channel)
-				fmt.Println("Do you want to receive a new file (1) or go out (2)")
-				fmt.Scan(&loop)
-				if loop == "1" {
-					flag = true
-				} else {
-					defer listen(channel)
-				}
+			for {
+				//flag := false
+				//var loop string
+				fmt.Println("In this moment you are listen a message...")
+				listen(channel)
+				/*for flag == false {
+					fmt.Println("In this momento you are listen a message...")
+					go listen(channel)
+					fmt.Println("Do you want to receive a new file (1) or go out (2)")
+					fmt.Scan(&loop)
+					if loop == "1" {
+						flag = true
+					} else {
+						defer listen(channel)
+					}
 
-			}*/
+				}*/
+			}
 
 		} else if listen1 == "2" {
 
