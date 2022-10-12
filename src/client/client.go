@@ -54,7 +54,6 @@ func listen(channel string) {
 				fmt.Println("Ocurrio error en 2")
 				continue
 			}
-			//New connection of other client
 
 			counter += 1
 			fmt.Println("You receive a file by ch1")
@@ -64,7 +63,7 @@ func listen(channel string) {
 			s.Close()
 		} else if channel == "2" {
 			fmt.Println("You receive a file by ch2")
-			r, err := net.Listen("tcp", ":5555")
+			r, err := net.Listen("tcp", ":553"+strconv.Itoa(randomNumber2))
 			if err != nil {
 				//r.Close()
 				main()

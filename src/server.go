@@ -99,33 +99,6 @@ func handleClient2(c net.Conn, counter int) {
 				//fmt.Println("Ingresamos al chanel 1")
 
 			}
-			//comienzo a comentar
-
-			/*
-				c, err := net.Dial("tcp", ":8080")
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-				c.Write([]byte(split1[1]))
-				defer c.Close()
-				//
-				fmt.Println("Ingresamos al chanel 1")
-
-				//Other port for other connection
-				//
-
-				c1, err1 := net.Dial("tcp", ":8081")
-				if err1 != nil {
-					fmt.Println(err)
-					return
-				}
-				c1.Write([]byte(split1[1]))
-				defer c1.Close()
-				//
-				fmt.Println("Ingresamos al chanel 1.1")
-			*/
-			//termino de comentar
 
 			//
 			/*out, err := os.Create("/Programming/codigos_go/serverClient/src/output/" + datatype1)
@@ -141,14 +114,19 @@ func handleClient2(c net.Conn, counter int) {
 			*/
 
 		} else if split2[0] == ("2") {
-			fmt.Println("Ingresamos al chanel2")
-			c, err := net.Dial("tcp", ":5555")
-			if err != nil {
-				fmt.Println(err)
-				return
+			for i := 0; i < 10; i++ {
+				//fmt.Println("Ingresamos al for")
+				c, err := net.Dial("tcp", ":553"+strconv.Itoa(i))
+				if err != nil {
+					continue
+				}
+				c.Write([]byte(split2[1]))
+				c.Close()
+				//
+				//fmt.Println("Ingresamos al chanel 1")
+
 			}
-			c.Write([]byte(split2[1]))
-			defer c.Close()
+
 		}
 
 	}
