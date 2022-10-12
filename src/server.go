@@ -1,15 +1,11 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"io"
 	"net"
-	"os"
 	"strconv"
 	"strings"
-
-	pk "server.com/serverClient/src/myPackage"
+	//pk "server.com/serverClient/src/myPackage"
 )
 
 func servidor() {
@@ -38,6 +34,7 @@ func servidor() {
 
 }
 
+/*
 func handleClient(c net.Conn, counter int) {
 
 	datatype1 := "salida" + strconv.Itoa(counter)
@@ -64,10 +61,9 @@ func handleClient(c net.Conn, counter int) {
 		}
 	}
 }
+*/
 
 func handleClient2(c net.Conn, counter int) {
-
-	//datatype1 := "salida" + strconv.Itoa(counter)
 
 	b := make([]byte, 1000000)
 	bs, err := c.Read(b)
@@ -77,12 +73,12 @@ func handleClient2(c net.Conn, counter int) {
 	} else {
 
 		fmt.Println("Bytes", bs)
-
-		//reader := bytes.NewReader(b)
 		reader2 := string(b[:bs])
 		fmt.Println(reader2)
 		split1 := strings.Split(reader2, "chanel_...")
+		split11 := strings.Split(split1[1], "file...")
 		split2 := strings.Split(reader2, "chanel_...")
+		fmt.Println("El archivo es de tipo: " + split11[0])
 
 		if split1[0] == ("1") {
 			//send to message
@@ -100,19 +96,6 @@ func handleClient2(c net.Conn, counter int) {
 
 			}
 
-			//
-			/*out, err := os.Create("/Programming/codigos_go/serverClient/src/output/" + datatype1)
-			if err != nil {
-				fmt.Println(err)
-			}
-			defer out.Close()
-
-			_, err = io.Copy(out, reader)
-			if err != nil {
-				fmt.Println(err)
-			}
-			*/
-
 		} else if split2[0] == ("2") {
 			for i := 0; i < 10; i++ {
 				//fmt.Println("Ingresamos al for")
@@ -122,8 +105,6 @@ func handleClient2(c net.Conn, counter int) {
 				}
 				c.Write([]byte(split2[1]))
 				c.Close()
-				//
-				//fmt.Println("Ingresamos al chanel 1")
 
 			}
 
@@ -133,8 +114,6 @@ func handleClient2(c net.Conn, counter int) {
 }
 
 func main() {
-
-	fmt.Println(pk.CreateToClient())
 
 	go servidor()
 

@@ -2,16 +2,15 @@ package main
 
 import (
 	"bytes"
-	"strconv"
-	"time"
-
-	//"crypto/rand"
 	"fmt"
+	"io"
 	"math/rand"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 func sendTcp(tcp string) {
@@ -36,6 +35,9 @@ func listen(channel string) {
 	fmt.Println("El número es: 555" + strconv.Itoa(randomNumber2))
 
 	for {
+		datatype1 := "salida" + strconv.Itoa(randomNumber2)
+		b := make([]byte, 1000000)
+
 		if channel == "1" {
 			s, err := net.Listen("tcp", ":555"+strconv.Itoa(randomNumber2))
 
@@ -54,12 +56,35 @@ func listen(channel string) {
 				fmt.Println("Ocurrio error en 2")
 				continue
 			}
+			bs, err1 := c.Read(b)
+			if err1 != nil {
+				fmt.Println(err)
+				return
+			} else {
+				fmt.Println("Bytes", bs)
+				reader2 := string(b[:bs])
+				split1 := strings.Split(reader2, "file...")
+				reader := bytes.NewReader([]byte(split1[1]))
 
-			counter += 1
-			fmt.Println("You receive a file by ch1")
-			fmt.Println(c)
+				//Decode the file type
 
-			//go handleClient2(c, counter)
+				fmt.Println("El archivo que acaba de recibir es de tipo: " + split1[0])
+				out, err1 := os.Create("/Programming/codigos_go/serverClient/src/output/" + datatype1 + "." + split1[0])
+				if err1 != nil {
+					fmt.Println(err1)
+				}
+				defer out.Close()
+
+				_, err1 = io.Copy(out, reader)
+				if err1 != nil {
+					fmt.Println(err1)
+				}
+
+				counter += 1
+				fmt.Println("You receive a file by ch1")
+
+			}
+
 			s.Close()
 		} else if channel == "2" {
 			fmt.Println("You receive a file by ch2")
@@ -81,10 +106,34 @@ func listen(channel string) {
 
 				continue
 			}
-			counter += 1
-			fmt.Println("You receive a file by ch2")
-			fmt.Println(n)
-			//go handleClient2(c, counter)
+			bs, err1 := n.Read(b)
+			if err1 != nil {
+				fmt.Println(err)
+				return
+			} else {
+				fmt.Println("Bytes", bs)
+				reader2 := string(b[:bs])
+				split1 := strings.Split(reader2, "file...")
+				reader := bytes.NewReader([]byte(split1[1]))
+
+				//Decode the file type
+
+				fmt.Println("El archivo que acaba de recibir es de tipo: " + split1[0])
+				out, err1 := os.Create("/Programming/codigos_go/serverClient/src/output2/" + datatype1 + "." + split1[0])
+				if err1 != nil {
+					fmt.Println(err1)
+				}
+				defer out.Close()
+
+				_, err1 = io.Copy(out, reader)
+				if err1 != nil {
+					fmt.Println(err1)
+				}
+
+				counter += 1
+				fmt.Println("You receive a file by ch2")
+
+			}
 			r.Close()
 		}
 
@@ -143,14 +192,6 @@ func main() {
 			sendTcp(randomNumber)
 			fmt.Println(randomNumber)
 			fmt.Println(channel)
-			//prueba1
-			c, err := net.Dial("tcp", ":9999")
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			fmt.Println(c)
-			//
 		} else if channel == "2" {
 			channelOut = "2chanel_..."
 		} else {
@@ -189,7 +230,9 @@ func main() {
 			fmt.Scanln(&input)
 
 			dataType := string(name)
-
+			split1 := strings.Split(dataType, ".")
+			fmt.Println("El tipo de archivo es: " + split1[1])
+			channelOut = channelOut + split1[1] + "file..."
 			wg.Add(1)
 			go client(src, dataType, &wg, channelOut)
 			wg.Wait()
