@@ -8,7 +8,7 @@ import (
 
 type Client struct {
 	Channel string
-	port    int
+	Port    string
 }
 
 func Clients(persona Client) {
@@ -23,16 +23,12 @@ func Clients(persona Client) {
 	}
 	c.Close()
 }
+func CreateToClient() string {
 
-/*Solicitar datos de usuario*/
-/*read := bufio.NewReader(os.Stdin)
-fmt.Println("Input the channel: ")
-channel, _ := read.ReadString('\n')
+	client2 := Client{"ch1", ":8082"}
+	//client3 := Client{"ch1", 8083}
+	//client4 := Client{"ch2", 8084}
+	//client5 := Client{"ch2", 8085}
 
-persona := InfoPersona{
-	Nombre: "channel: " + channel
+	return client2.Port
 }
-go Clients(persona)
-var input string
-fmt.Scanln(&input)
-*/
