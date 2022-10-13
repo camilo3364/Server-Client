@@ -13,26 +13,13 @@ import (
 	"time"
 )
 
-func sendTcp(tcp string) {
-	name := []byte(tcp)
-	c, err := net.Dial("tcp", ":8080")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(name)
-	c.Write([]byte(tcp))
-
-	c.Close()
-
-}
 func listen(channel string) {
 	var counter int
 
 	rand.Seed(int64(time.Now().UnixNano()))
 	randomNumber2 := rand.Intn(10)
 
-	fmt.Println("El número es: 555" + strconv.Itoa(randomNumber2))
+	//fmt.Println("El number is: 555" + strconv.Itoa(randomNumber2))
 
 	for {
 		datatype1 := "salida" + strconv.Itoa(randomNumber2)
@@ -50,10 +37,7 @@ func listen(channel string) {
 			c, err := s.Accept()
 
 			if err != nil {
-
-				//main()
 				fmt.Println(err)
-				fmt.Println("Ocurrio error en 2")
 				continue
 			}
 			bs, err1 := c.Read(b)
@@ -61,14 +45,15 @@ func listen(channel string) {
 				fmt.Println(err)
 				return
 			} else {
-				fmt.Println("Bytes", bs)
+				fmt.Println("You receive a file by ch1")
+				//fmt.Println("Bytes", bs)
 				reader2 := string(b[:bs])
 				split1 := strings.Split(reader2, "file...")
 				reader := bytes.NewReader([]byte(split1[1]))
 
 				//Decode the file type
 
-				fmt.Println("El archivo que acaba de recibir es de tipo: " + split1[0])
+				fmt.Println("The file that you receive is a: " + split1[0])
 				out, err1 := os.Create("/Programming/codigos_go/serverClient/src/output/" + datatype1 + "." + split1[0])
 				if err1 != nil {
 					fmt.Println(err1)
@@ -81,29 +66,21 @@ func listen(channel string) {
 				}
 
 				counter += 1
-				fmt.Println("You receive a file by ch1")
 
 			}
 
 			s.Close()
 		} else if channel == "2" {
-			fmt.Println("You receive a file by ch2")
+
 			r, err := net.Listen("tcp", ":553"+strconv.Itoa(randomNumber2))
 			if err != nil {
-				//r.Close()
 				main()
 				continue
-				//fmt.Println(err)
-				//fmt.Println("Ocurrio error en 3")
-
-				//return
 
 			}
 			n, err := r.Accept()
 			if err != nil {
 				fmt.Println(err)
-				fmt.Println("Ocurrio error en 4")
-
 				continue
 			}
 			bs, err1 := n.Read(b)
@@ -111,14 +88,13 @@ func listen(channel string) {
 				fmt.Println(err)
 				return
 			} else {
-				fmt.Println("Bytes", bs)
 				reader2 := string(b[:bs])
 				split1 := strings.Split(reader2, "file...")
 				reader := bytes.NewReader([]byte(split1[1]))
 
 				//Decode the file type
 
-				fmt.Println("El archivo que acaba de recibir es de tipo: " + split1[0])
+				fmt.Println("The file that you receive is a: " + split1[0])
 				out, err1 := os.Create("/Programming/codigos_go/serverClient/src/output2/" + datatype1 + "." + split1[0])
 				if err1 != nil {
 					fmt.Println(err1)
@@ -129,10 +105,8 @@ func listen(channel string) {
 				if err1 != nil {
 					fmt.Println(err1)
 				}
-
-				counter += 1
 				fmt.Println("You receive a file by ch2")
-
+				counter += 1
 			}
 			r.Close()
 		}
@@ -170,11 +144,7 @@ func client(src, dataType string, wg *sync.WaitGroup, channel string) {
 
 func main() {
 	for {
-		//var person pk.Client
 		//variables
-		//RandomCrypto := 2000
-		randomNumber := "8081"
-
 		var wg sync.WaitGroup
 		var name string
 		var channel string
@@ -189,8 +159,6 @@ func main() {
 		fmt.Scan(&channel)
 		if channel == "1" {
 			channelOut = "1chanel_..."
-			sendTcp(randomNumber)
-			fmt.Println(randomNumber)
 			fmt.Println(channel)
 		} else if channel == "2" {
 			channelOut = "2chanel_..."
@@ -201,27 +169,12 @@ func main() {
 
 		if listen1 == "1" {
 			for {
-				//flag := false
-				//var loop string
 				fmt.Println("In this moment you are listen a message...")
 				listen(channel)
-				/*for flag == false {
-					fmt.Println("In this momento you are listen a message...")
-					go listen(channel)
-					fmt.Println("Do you want to receive a new file (1) or go out (2)")
-					fmt.Scan(&loop)
-					if loop == "1" {
-						flag = true
-					} else {
-						defer listen(channel)
-					}
-
-				}*/
 			}
 
 		} else if listen1 == "2" {
 
-			//go connectChannel(channel)
 			//Message
 			fmt.Println("Please write the name of the file for example (image.png or hello.txt): ")
 			fmt.Scan(&name)
@@ -231,7 +184,7 @@ func main() {
 
 			dataType := string(name)
 			split1 := strings.Split(dataType, ".")
-			fmt.Println("El tipo de archivo es: " + split1[1])
+			fmt.Println("the file type is: " + split1[1])
 			channelOut = channelOut + split1[1] + "file..."
 			wg.Add(1)
 			go client(src, dataType, &wg, channelOut)
@@ -240,7 +193,7 @@ func main() {
 			fmt.Scan(&name)
 
 			if strings.ToLower(string(name)) == "yes" {
-				print("Ingreso al if")
+				//print("Ingreso al if")
 				main()
 			} else if strings.ToLower(string(name)) == "no" {
 				break
