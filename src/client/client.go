@@ -13,6 +13,11 @@ import (
 	"time"
 )
 
+/*
+In this function there are two channels Ch1 and Ch2, which by means of a random number
+between 1 and 9 assign the TCP port for data reception, in this way each time a client
+is started it will have a different TCP port, because webSockets was not used.
+*/
 func listen(channel string) {
 	var counter int
 
@@ -60,6 +65,7 @@ func listen(channel string) {
 				}
 				defer out.Close()
 
+				//Save the file in a different folder to ch2
 				_, err1 = io.Copy(out, reader)
 				if err1 != nil {
 					fmt.Println(err1)
@@ -71,7 +77,7 @@ func listen(channel string) {
 
 			s.Close()
 		} else if channel == "2" {
-
+			//This is channel 2 and the TCP connection is different to ch1
 			r, err := net.Listen("tcp", ":553"+strconv.Itoa(randomNumber2))
 			if err != nil {
 				main()
@@ -115,8 +121,13 @@ func listen(channel string) {
 
 }
 
-func client(src, dataType string, wg *sync.WaitGroup, channel string) {
+/*
+With this function the file is sent to the server when the client
+is not in listening mode but in sending data mode.
+*/
 
+func client(src, dataType string, wg *sync.WaitGroup, channel string) {
+	//Open the file
 	filerc, err := os.Open(src + dataType)
 	if err != nil {
 		fmt.Println(err)
@@ -124,6 +135,7 @@ func client(src, dataType string, wg *sync.WaitGroup, channel string) {
 	}
 	defer filerc.Close()
 
+	//Convert the file in to bits
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(filerc)
 	contents := buf.String()
@@ -134,9 +146,10 @@ func client(src, dataType string, wg *sync.WaitGroup, channel string) {
 		fmt.Println(err)
 		return
 	}
+	//Send the file with extra bits with the type information and channel information.
 	c.Write([]byte(channel))
 	c.Write([]byte(contents))
-
+	//Use a Waitgroup by go concurrency
 	defer wg.Done()
 	c.Close()
 
@@ -166,7 +179,7 @@ func main() {
 			fmt.Println("Please, you should select a channel ")
 			main()
 		}
-
+		//Select the funtion if listen a message or send the message by channels
 		if listen1 == "1" {
 			for {
 				fmt.Println("In this moment you are listen a message...")
@@ -192,6 +205,7 @@ func main() {
 			fmt.Println("Do you need send other file? Yes or No")
 			fmt.Scan(&name)
 
+			//Know if you want to send a message again or if you want to exit.
 			if strings.ToLower(string(name)) == "yes" {
 				//print("Ingreso al if")
 				main()
