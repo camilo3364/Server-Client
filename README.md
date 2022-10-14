@@ -22,6 +22,7 @@ Server/Client is a communication program using the TCP protocol for reception an
 - [strconv] - Convert integers to string
 - [strings] - Convert to string
 - [time] - Get a different random number using the current date.
+(https://raw.githubusercontent.com/camilo3364/Server-Client/master/assets/src/example.jpg)
 
 
 
