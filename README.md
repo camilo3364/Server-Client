@@ -23,8 +23,9 @@ Server/Client is a communication program using the TCP protocol for reception an
 - [strings] - Convert to string
 - [time] - Get a different random number using the current date.
 
+![Server waiting for files to be sent by a client in the state of sending files and 3 clients waiting for files 2 on channel 1 and 1 on channel 2.]
 
-https://raw.githubusercontent.com/camilo3364/Server-Client/master/src/example.jpg
+(https://raw.githubusercontent.com/camilo3364/Server-Client/master/src/example.jpg)
 
 
 
